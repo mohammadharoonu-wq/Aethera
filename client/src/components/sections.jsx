@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 import { Reveal } from "./Reveal.jsx";
+import { RotatingBadge } from "./RotatingBadge.jsx";
 import { useCounter } from "../hooks/useCounter.js";
 import { useCardTilt } from "../hooks/useCardTilt.js";
 import { useLocalClock } from "../hooks/useLocalClock.js";
@@ -68,11 +69,10 @@ export function Hero({ introComplete }) {
         <div className="hero-background-overlay" />
       </div>
       <div className="hero-content">
-        {/* A fixed compliance claim, not a rotating one. The badge is the first
-            thing the page says about itself, and the one line that has to be
-            true on every load — so it states the standard we actually hold
-            ourselves to rather than cycling through the service catalogue. */}
-        <p className="badge-pill">OWASP Compliance Verification</p>
+        {/* RotatingBadge renders the pill itself (same `badge-pill` class, so
+            the status dot and every other treatment come from the stylesheet);
+            it owns the service rotation and the fade between entries. */}
+        <RotatingBadge />
         <h1
           id="hero-heading"
           className={`hero-headline${isRevealed ? " is-revealed" : ""}`}

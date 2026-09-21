@@ -1182,6 +1182,20 @@ h6,
     70% { box-shadow: 0 0 8px hsla(348, 83%, 45%, 0.8), 0 0 0 5px hsla(348, 83%, 42%, 0); }
 }
 
+/* The rotating service line. Keyed by index in RotatingBadge so React remounts
+   the span on every swap, which is what restarts this fade — the animation runs
+   once per mount, so a stable node would animate the first entry only and every
+   later one would cut in with no transition. */
+.badge-pill-rotating {
+    display: inline-block;
+    animation: badge-text-fade 0.4s ease-out;
+}
+
+@keyframes badge-text-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
 .hero-headline {
     max-width: 20ch;
     font-size: var(--text-display);
