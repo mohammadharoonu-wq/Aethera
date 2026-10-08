@@ -2106,6 +2106,19 @@ h6,
     border-radius: var(--radius-lg);
 }
 
+/* A real homepage capture, when one is mapped for the slug. It has no window
+   chrome to measure, so the box is sized by aspect ratio instead of by its
+   content — matching the placeholder's proportions closely enough that a
+   screenshot card and a placeholder card still read as the same component.
+   Anchored to the top because a full-page capture is far taller than this box,
+   and the top of the homepage is the part worth showing. */
+.portfolio-media.has-screenshot {
+    aspect-ratio: 16 / 10;
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
 .window-header {
     display: flex;
     gap: var(--space-2);

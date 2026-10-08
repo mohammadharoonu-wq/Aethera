@@ -10,13 +10,14 @@ import { useComparisonSlider } from "../hooks/useComparisonSlider.js";
 import { usePortfolioFilter, ALL_CATEGORIES } from "../hooks/usePortfolioFilter.js";
 import { splitWords, useHeadlineReveal } from "../hooks/useReveal.js";
 import { useScrollLock } from "../hooks/useScrollLock.js";
+import { projectScreenshot } from "../data/projectScreenshots.js";
 import { serviceBackground } from "../data/serviceBackgrounds.js";
 import builtDeliberatelyImg from "../assets/built-deliberately.png";
 import heroWorkspaceImg from "../assets/hero-workspace.jpg";
 
 /**
  * Fallback ticker copy while the landing content is still in flight (or failed
- * to load) — the same nine services the API returns, so the swap when titles
+ * to load) — the same ten services the API returns, so the swap when titles
  * arrive is a change of wording at worst, never a change of content.
  */
 const CAPABILITIES = [
@@ -29,6 +30,7 @@ const CAPABILITIES = [
   "UI/UX Design",
   "Software Testing",
   "Odoo Implementation and Development",
+  "SEO",
 ];
 
 /**
@@ -314,6 +316,9 @@ export function Focus({ services }) {
 
 function PortfolioCard({ item, index, cardProps }) {
   const { className, hidden } = cardProps(item);
+  // Keyed on the item's own slug, so the image can only ever be the one mapped
+  // to this card. Unmapped falls back to the placeholder below.
+  const screenshot = projectScreenshot(item.slug);
 
   return (
     <Reveal
@@ -323,16 +328,28 @@ function PortfolioCard({ item, index, cardProps }) {
       staggerIndex={index}
       hidden={hidden}
     >
-      <div className="portfolio-media" aria-hidden="true">
-        <div className="window-header">
-          <span className="dot" />
-          <span className="dot" />
-          <span className="dot" />
-        </div>
-        <div className="window-content">
-          <span className="symbol">&lt;/&gt;</span>
-          <span className="code-line">build passing</span>
-        </div>
+      {/* The quotes inside url() are load-bearing: Vite inlines an image this
+          small as a data URI carrying single quotes around its attributes, and
+          an unquoted url() token may not contain a quote character — the
+          declaration parses as invalid and is dropped without any error. */}
+      <div
+        className={`portfolio-media${screenshot ? " has-screenshot" : ""}`}
+        style={screenshot ? { backgroundImage: `url("${screenshot}")` } : undefined}
+        aria-hidden="true"
+      >
+        {!screenshot && (
+          <>
+            <div className="window-header">
+              <span className="dot" />
+              <span className="dot" />
+              <span className="dot" />
+            </div>
+            <div className="window-content">
+              <span className="symbol">&lt;/&gt;</span>
+              <span className="code-line">build passing</span>
+            </div>
+          </>
+        )}
       </div>
       <span className="metric-badge">{item.service?.title}</span>
       <h3 className="card-title">{item.title}</h3>
