@@ -301,10 +301,6 @@
     box-shadow: var(--shadow-sm), inset 0 1px 0 rgba(0, 0%, 100%, 0.6);
 }
 
-:root.light .security-badge {
-    background: rgba(0, 0, 0, 0.04);
-}
-
 /* The hero's ambient orb is a light source for a dark room. On white it has
    nothing to light and only muddies the photo, so it is dropped outright
    rather than dimmed. */
@@ -2119,6 +2115,17 @@ h6,
     background-size: cover;
 }
 
+/* Captures too wide to fill that box without losing their edges — see
+   UNCROPPED_SLUGS in data/projectScreenshots.js. `contain` keeps the whole
+   capture and leaves a band behind instead; the band is painted the light end
+   of the ramp, which the semantic layer never inverts, because it stands in for
+   the white paper of the capture it sits under in both themes. The ratio above
+   still governs the box, so this card lines up with the ones beside it. */
+.portfolio-media.has-screenshot.is-uncropped {
+    background-color: var(--neutral-0);
+    background-size: contain;
+}
+
 .window-header {
     display: flex;
     gap: var(--space-2);
@@ -2401,27 +2408,6 @@ h6,
 .location-address {
     font-size: var(--text-sm);
     color: var(--text-tertiary);
-}
-
-.location-clock {
-    margin-block-start: var(--space-4);
-    padding-block-start: var(--space-4);
-    font-family: var(--font-mono);
-    font-size: var(--text-sm);
-    font-variant-numeric: tabular-nums;
-    color: var(--text-secondary);
-    border-block-start: 1px solid var(--border-subtle);
-}
-
-/* The placeholder is dimmed until the module confirms a live value. */
-.location-clock[data-clock] {
-    color: var(--text-faint);
-}
-
-/* Cyan once the clock is actually ticking — mono tabular digits in the accent
-   read as a live readout, which is the whole point of showing local time. */
-.location-clock[data-clock].is-live {
-    color: var(--accent-600);
 }
 
 /* ==========================================================================
@@ -2770,7 +2756,7 @@ h6,
 
 .footer-top {
     display: grid;
-    grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
     gap: var(--space-10);
     padding-block-end: var(--space-12);
     border-block-end: 1px solid var(--border-inverse);
@@ -2814,22 +2800,6 @@ h6,
 
 .site-footer .contact-link:focus-visible {
     outline-color: var(--primary-500);
-}
-
-.badge-container {
-    display: grid;
-    gap: var(--space-2);
-    justify-items: start;
-}
-
-.security-badge {
-    padding: var(--space-1) var(--space-3);
-    font-size: var(--text-2xs);
-    font-weight: 500;
-    color: var(--text-secondary);
-    background: hsla(0, 0%, 100%, 0.06);
-    border: 1px solid var(--border-inverse);
-    border-radius: var(--radius-full);
 }
 
 .footer-bottom {

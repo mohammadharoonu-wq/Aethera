@@ -33,4 +33,27 @@ const PROJECT_SCREENSHOTS = Object.fromEntries(
 
 export const projectScreenshot = (slug) => PROJECT_SCREENSHOTS[slug] ?? null;
 
+/**
+ * Captures that must be shown whole instead of cropped to fill the card.
+ *
+ * `.portfolio-media.has-screenshot` is a fixed 16/10 box, and `cover` fills it
+ * by scaling whichever axis overflows — so a capture wider than 16/10, which is
+ * what a full-width hero shot is, loses its left and right edges. Those edges
+ * are where a site keeps its logo and its header call to action: the two things
+ * that say which site you are looking at. These slugs render with `contain`
+ * instead, so the whole capture survives, at the cost of a band the card paints
+ * the colour of the capture's own paper.
+ *
+ * The box itself does not change, so the card still lines up with the ones
+ * beside it. Which image a slug gets is still decided by the filename above;
+ * only the fitting is decided here, because no filename can carry it.
+ *
+ * Listing a slug here whose capture is *not* wider than 16/10 is harmless but
+ * pointless — it can only gain a band it did not need. Leaving a wide capture
+ * off the list is the silent failure: it just crops.
+ */
+const UNCROPPED_SLUGS = new Set(["abcipl-interiors", "yara-school"]);
+
+export const projectScreenshotUncropped = (slug) => UNCROPPED_SLUGS.has(slug);
+
 export default PROJECT_SCREENSHOTS;

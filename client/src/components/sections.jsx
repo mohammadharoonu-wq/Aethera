@@ -5,12 +5,11 @@ import { Reveal } from "./Reveal.jsx";
 import { RotatingBadge } from "./RotatingBadge.jsx";
 import { useCounter } from "../hooks/useCounter.js";
 import { useCardTilt } from "../hooks/useCardTilt.js";
-import { useLocalClock } from "../hooks/useLocalClock.js";
 import { useComparisonSlider } from "../hooks/useComparisonSlider.js";
 import { usePortfolioFilter, ALL_CATEGORIES } from "../hooks/usePortfolioFilter.js";
 import { splitWords, useHeadlineReveal } from "../hooks/useReveal.js";
 import { useScrollLock } from "../hooks/useScrollLock.js";
-import { projectScreenshot } from "../data/projectScreenshots.js";
+import { projectScreenshot, projectScreenshotUncropped } from "../data/projectScreenshots.js";
 import { serviceBackground } from "../data/serviceBackgrounds.js";
 import builtDeliberatelyImg from "../assets/built-deliberately.png";
 import heroWorkspaceImg from "../assets/hero-workspace.jpg";
@@ -46,9 +45,9 @@ const STATS = [
 ];
 
 const LOCATIONS = [
-  { tag: "Main office", city: "Lucknow", address: "Uttar Pradesh, India", zone: "Asia/Kolkata" },
-  { tag: "Remote", city: "Delhi", address: "India", zone: "Asia/Kolkata" },
-  { tag: "Remote", city: "Noida", address: "Uttar Pradesh, India", zone: "Asia/Kolkata" },
+  { tag: "Main office", city: "Lucknow", address: "Uttar Pradesh, India" },
+  { tag: "Remote", city: "Delhi", address: "India" },
+  { tag: "Remote", city: "Noida", address: "Uttar Pradesh, India" },
 ];
 
 export function Hero({ introComplete }) {
@@ -319,6 +318,9 @@ function PortfolioCard({ item, index, cardProps }) {
   // Keyed on the item's own slug, so the image can only ever be the one mapped
   // to this card. Unmapped falls back to the placeholder below.
   const screenshot = projectScreenshot(item.slug);
+  // Only meaningful alongside a screenshot — the fallback draws its own content
+  // and has no edges to lose.
+  const uncropped = Boolean(screenshot) && projectScreenshotUncropped(item.slug);
 
   return (
     <Reveal
@@ -333,7 +335,7 @@ function PortfolioCard({ item, index, cardProps }) {
           an unquoted url() token may not contain a quote character — the
           declaration parses as invalid and is dropped without any error. */}
       <div
-        className={`portfolio-media${screenshot ? " has-screenshot" : ""}`}
+        className={`portfolio-media${screenshot ? " has-screenshot" : ""}${uncropped ? " is-uncropped" : ""}`}
         style={screenshot ? { backgroundImage: `url("${screenshot}")` } : undefined}
         aria-hidden="true"
       >
@@ -574,22 +576,11 @@ export function Proof({ caseStudies }) {
 }
 
 function LocationCard({ location, index }) {
-  const { time, isLive } = useLocalClock(location.zone);
-
   return (
     <Reveal className="location" staggerIndex={index}>
       <p className="location-tag">{location.tag}</p>
       <h3 className="location-city">{location.city}</h3>
       <p className="location-address">{location.address}</p>
-      <p
-        className={`location-clock${isLive ? " is-live" : ""}`}
-        data-clock=""
-        data-timezone={location.zone}
-      >
-        <span className="visually-hidden">Current local time: </span>
-        {/* The placeholder stays until the first client tick resolves. */}
-        <span data-clock-value="">{isLive ? time : "—"}</span>
-      </p>
     </Reveal>
   );
 }
